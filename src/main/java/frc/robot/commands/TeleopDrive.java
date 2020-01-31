@@ -33,9 +33,9 @@ public class TeleopDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    joyX = singleStick.getRawAxis(0);
+    joyX = singleStick.getRawAxis(4);
     joyY = singleStick.getRawAxis(1);
-    current.PercentDrive(joyX,joyY);
+    current.PercentDrive(-joyX,-joyY);
   }
 
   // Called once the command ends or is interrupted.

@@ -15,26 +15,58 @@ public class Drivetrain extends SubsystemBase {
   /**
    * Creates a new Drivetrain.
    */
-  private VictorSPX LM1 = new VictorSPX(1);
-  private VictorSPX LM2 = new VictorSPX(2);
-  private VictorSPX RM1 = new VictorSPX(3);
-  private VictorSPX RM2 = new VictorSPX(4);
+  private VictorSPX RM1 = new VictorSPX(1);
+  private VictorSPX RM2 = new VictorSPX(2);
+  private VictorSPX LM1 = new VictorSPX(3);
+  private VictorSPX LM2 = new VictorSPX(4);
   public static double DriveHandicap = .8;
   public Drivetrain() {
   }
-
+  /**
+  The Desciption of the method to explain what the method does
+  @param the parameters used by the method
+  @return the value returned by the method
+  @throws what kind of exception does this method throw
+*/
   public void PercentDrive(double speedX, double speedY){
+    //speedY: Positive Y goes forward, negative X goes backwards
+    //speedX: Positive X goes left, negative X goes right
+    double FinalLeftSpeed = speedX < -.1 ? (speedY - speedX) : speedY;
+    double FinalRightSpeed = speedX > .1 ? (speedY + speedX) : speedY;
+    
+    //setting motors to speeds
+    LM1.set(ControlMode.PercentOutput, FinalLeftSpeed * DriveHandicap);
+    LM2.set(ControlMode.PercentOutput, FinalLeftSpeed * DriveHandicap);
+    RM1.set(ControlMode.PercentOutput, -FinalRightSpeed * DriveHandicap);
+    RM2.set(ControlMode.PercentOutput, -FinalRightSpeed * DriveHandicap);
+  }
+  public void OldPercentDrive(double speedX, double speedY){
     double FinalLeftSpeed = 0;
     double FinalRightSpeed = 0;
-
-    FinalLeftSpeed = speedX > -.2 ? (speedY - speedX) : speedY;
-    FinalRightSpeed = speedX < .2 ? -(speedY - speedX) : -speedY;
-
+    double LowerSpeed = Math.abs(speedY) - Math.abs(speedX);
+    if(speedY <-.1){
+        speedX = -speedX;
+    }
+      //
+      if(speedX < 0){
+        FinalLeftSpeed = LowerSpeed;
+        FinalRightSpeed = speedY;
+      }
+      //
+      else if(speedX > 0){
+        FinalLeftSpeed = speedY;
+        FinalRightSpeed = LowerSpeed;
+        
+      }
+      else{
+        FinalLeftSpeed = speedY;
+        FinalRightSpeed = speedY;
+      }
     //setting all motor controllers with percentage
     LM1.set(ControlMode.PercentOutput, FinalLeftSpeed * DriveHandicap);
     LM2.set(ControlMode.PercentOutput, FinalLeftSpeed * DriveHandicap);
-    RM1.set(ControlMode.PercentOutput, FinalRightSpeed * DriveHandicap);
-    RM2.set(ControlMode.PercentOutput, FinalRightSpeed * DriveHandicap);
+    RM1.set(ControlMode.PercentOutput, -FinalRightSpeed * DriveHandicap);
+    RM2.set(ControlMode.PercentOutput, -FinalRightSpeed * DriveHandicap);
   }
 
   public void Stop(){
