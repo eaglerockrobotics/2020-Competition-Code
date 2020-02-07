@@ -7,12 +7,12 @@
 
 package frc.robot;
 
-
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.TeleopDrive;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -68,7 +68,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
     // schedule the autonomous command (example)
     /*
     if (m_autonomousCommand != null) {
@@ -82,6 +81,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    library.getTesting().SpinNScan(-.5);
   }
 
   @Override
