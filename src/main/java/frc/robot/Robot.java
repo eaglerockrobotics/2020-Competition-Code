@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command mTeleCommand;
   private RobotContainer library;
+  double[] testResults = new double[10];
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -81,7 +82,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    library.getTesting().SpinNScan(-.5);
+    library.getTesting().SpinScanAndControl();
   }
 
   @Override
