@@ -10,9 +10,14 @@ package frc.robot;
 
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.TeleopDrive;
+
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -23,6 +28,13 @@ import frc.robot.commands.TeleopDrive;
 public class Robot extends TimedRobot {
   private Command mTeleCommand;
   private RobotContainer library;
+  private Command m_autonomousCommand;
+  public double startTime;
+
+  private VictorSPX RM1 = new VictorSPX(1);
+  private VictorSPX RM2 = new VictorSPX(2);
+  private VictorSPX LM1 = new VictorSPX(3);
+  private VictorSPX LM2 = new VictorSPX(4);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -33,6 +45,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     library = new RobotContainer();
+    
   }
 
   /**
@@ -75,6 +88,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
     */
+    startTime = Timer.getFPGATimestamp();
   }
 
   /**
@@ -82,6 +96,19 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    double time = Timer.getFPGATimestamp();
+    if (time - startTime < 3){
+      LM1.set(ControlMode.PercentOutput,0.1);
+      LM2.set(ControlMode.PercentOutput,0.1);
+      RM1.set(ControlMode.PercentOutput,-0.1);
+      RM2.set(ControlMode.PercentOutput,-0.1);
+    }
+    else{
+      LM1.set(ControlMode.PercentOutput,0);
+      LM2.set(ControlMode.PercentOutput,0);
+      RM1.set(ControlMode.PercentOutput,0);
+      RM2.set(ControlMode.PercentOutput,0);
+    }
   }
 
   @Override
