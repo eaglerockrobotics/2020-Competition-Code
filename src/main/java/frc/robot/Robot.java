@@ -82,8 +82,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    //library.getTesting().SpinScanAndControl();
-    library.getTesting().VSenseNPut();
+    library.getTesting().SpinScanAndControl();
+    //library.getTesting().VSenseNPut();
   }
 
   @Override

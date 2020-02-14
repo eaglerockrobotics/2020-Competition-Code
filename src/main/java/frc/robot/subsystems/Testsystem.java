@@ -19,13 +19,12 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 public class Testsystem extends SubsystemBase {
   Timer PIDCooldown = new Timer();
   boolean PIDReady = false;
-  WPI_TalonSRX Encoder = new WPI_TalonSRX(12);
+  WPI_TalonSRX Encoder = new WPI_TalonSRX(6);
   TalonSRXConfiguration defaults = new TalonSRXConfiguration();
   final double velocityToPercentish = .0001;
-  double P = 2, I = 1, D = 1;
-  double error,derivative,previous_error,integral,Answer = 0;
+  double P = 1, I = 1, D = 1;
+  double error,derivative,previous_error,integral,Answer,AnswerPercent;
   double speed = 0;
-  boolean negativespeed = false;
   AnalogInput ultra = new AnalogInput(0);
   /**
    * Creates a new Testsystem.
@@ -46,9 +45,12 @@ public class Testsystem extends SubsystemBase {
     SmartDashboard.putNumber("CurrentVelocity",Encoder.getSelectedSensorVelocity());
   }
   public void SpinScanAndControl(){
-    PIDCooldown.hasPeriodPassed(1);
-    speed = PIDencoder(-20000);
-    //Encoder.set(ControlMode.PercentOutput,speed);
+    SmartDashboard.putNumber("Time",PIDCooldown.get());
+    if(RealTimerHours(.25)){
+      speed = PIDencoder(-28000);
+    }
+    SmartDashboard.putNumber("Speed",speed);
+    Encoder.set(ControlMode.PercentOutput,speed);
 
 
     SmartDashboard.putNumber("VelocityGraph",Encoder.getSelectedSensorVelocity());
@@ -72,6 +74,8 @@ public class Testsystem extends SubsystemBase {
     SmartDashboard.putNumber("D",0);
     SmartDashboard.putNumber("Answer",0);
     SmartDashboard.putNumber("Ultrasonic Voltage",0);
+    SmartDashboard.putNumber("Time",0);
+
   }
   @Override
   public void periodic() {
@@ -86,10 +90,7 @@ public class Testsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
   public double PIDencoder(double setspeed){
-    if(setspeed < 0){
-      negativespeed = true;
-    }
-    error = Math.abs(setspeed) - Math.abs(Encoder.getSelectedSensorVelocity());// Error = Target - Actual
+    error = setspeed - Encoder.getSelectedSensorVelocity();// Error = Target - Actual
     SmartDashboard.putNumber("P",error);
     /*
     this.integral += (error*.02); // Integral is increased by the error*time (which is .02 seconds using normal IterativeRobot)
@@ -100,10 +101,32 @@ public class Testsystem extends SubsystemBase {
     Answer = P*error + I*this.integral + D*derivative;
     */
     Answer = P*error;
-    if(negativespeed){
-      Answer = -Math.abs(Answer);
-    }
     SmartDashboard.putNumber("Answer",Answer);
-    return Answer;
+    AnswerPercent = VelToPercent(Answer, setspeed);
+    if(AnswerPercent > .7){
+      AnswerPercent = .7;
+    }
+    if(AnswerPercent < -.7){
+      AnswerPercent = -.7;
+    }
+    return AnswerPercent;
+  }
+  public double VelToPercent(double in, double target){
+    if(in < 0){
+      return -Math.abs(in/target);
+    }
+    else{
+      return Math.abs(in/target);
+    }
+
+  }
+  public boolean RealTimerHours(double Expected){
+    if(PIDCooldown.get() >= Expected){
+      PIDCooldown.reset();
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 }
