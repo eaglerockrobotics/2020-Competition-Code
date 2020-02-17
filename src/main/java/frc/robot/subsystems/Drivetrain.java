@@ -15,11 +15,22 @@ public class Drivetrain extends SubsystemBase {
   /**
    * Creates a new Drivetrain.
    */
+
+
+
+
   private VictorSPX RM1 = new VictorSPX(1);
   private VictorSPX RM2 = new VictorSPX(2);
   private VictorSPX LM1 = new VictorSPX(3);
   private VictorSPX LM2 = new VictorSPX(4);
   public static double DriveHandicap = .8;
+  int speedFlat;
+  
+  
+  boolean comp = false
+  ;
+  
+  
   public Drivetrain() {
   }
   /**
@@ -28,6 +39,18 @@ public class Drivetrain extends SubsystemBase {
   @return the value returned by the method
   @throws what kind of exception does this method throw
 */
+
+  public void demobot(){
+
+    if (comp == true){
+      speedFlat = 1;
+    }
+    else{
+      speedFlat = 2;
+    }
+  }
+
+
   public void PercentDrive(double speedX, double speedY){
     //speedY: Positive Y goes forward, negative X goes backwards
     //speedX: Positive X goes left, negative X goes right
@@ -63,10 +86,10 @@ public class Drivetrain extends SubsystemBase {
         FinalRightSpeed = speedY;
       }
     //setting all motor controllers with percentage
-    LM1.set(ControlMode.PercentOutput, FinalLeftSpeed * DriveHandicap);
-    LM2.set(ControlMode.PercentOutput, FinalLeftSpeed * DriveHandicap);
-    RM1.set(ControlMode.PercentOutput, -FinalRightSpeed * DriveHandicap);
-    RM2.set(ControlMode.PercentOutput, -FinalRightSpeed * DriveHandicap);
+    LM1.set(ControlMode.PercentOutput, (FinalLeftSpeed * DriveHandicap)/speedFlat);
+    LM2.set(ControlMode.PercentOutput, (FinalLeftSpeed * DriveHandicap)/speedFlat);
+    RM1.set(ControlMode.PercentOutput, (-FinalRightSpeed * DriveHandicap)/speedFlat);
+    RM2.set(ControlMode.PercentOutput, (-FinalRightSpeed * DriveHandicap)/speedFlat);
   }
 
   public void Stop(){
