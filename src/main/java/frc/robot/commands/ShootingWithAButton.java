@@ -8,21 +8,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Shooter;
 
-public class TeleopDrive extends CommandBase {
+public class ShootingWithAButton extends CommandBase {
   /**
-   * Creates a new TeleopDrive.
+   * Creates a new ShootingWithAButton.
    */
-  Joystick Insert;
-  double joyX = 0;
-  double joyY = 0;
-  Drivetrain current;
-  public TeleopDrive(Drivetrain a, Joystick in) {
-    addRequirements(a);
-    current = a;
-    Insert = in;
+  private Shooter cShoot;
+  private Joystick cJoy;
+  private boolean Toggle = false;
+  private boolean PressOnce = false;
+  public ShootingWithAButton(Shooter in, Joystick inn) {
+    cShoot = in;
+    cJoy = inn;
+    SmartDashboard.putBoolean("Shooter On", false);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -34,17 +35,28 @@ public class TeleopDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    joyX = Insert.getRawAxis(4);
-    joyY = Insert.getRawAxis(1);
-    current.PercentDrive(-joyX,-joyY);
+    if(cJoy.getRawButton(1)){
+      if(!PressOnce){
+        PressOnce = true;
+        Toggle = !Toggle;
+      }
+    }
+    else{
+      PressOnce = false;
+    }
+
+    if(Toggle){ 
+      cShoot.ShootP();
+    }
+    else{
+      cShoot.Stop();
+    }
+    SmartDashboard.putBoolean("Shooter On", Toggle);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(interrupted){
-      current.Stop();
-    }
   }
 
   // Returns true when the command should end.

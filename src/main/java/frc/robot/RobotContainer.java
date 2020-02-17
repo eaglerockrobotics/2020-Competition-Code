@@ -8,9 +8,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.ShootingWithAButton;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Testsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -21,10 +25,18 @@ import edu.wpi.first.wpilibj2.command.Command;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  //subsystems && other physicals
+  private Joystick singleStick = new Joystick(0);
   private final Drivetrain mDt = new Drivetrain();
   private final Testsystem mT = new Testsystem();
-  private final TeleopDrive mTeleopCommand = new TeleopDrive(mDt);
+  private final Shooter mS = new Shooter();
+
+  //Commands
+  private final Command JoyDrive = new TeleopDrive(mDt, singleStick);
+  private final Command ButtonShooter = new ShootingWithAButton(mS, singleStick);
+  private final Command mAutoCommand = null;
+
+  //Buttons and extras for Commands
 
 
 
@@ -34,6 +46,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    SmartDashboard.putBoolean("ShooterEnabled", false);
   }
 
   /**
@@ -47,10 +60,20 @@ public class RobotContainer {
   public Drivetrain getDrivetrain(){
     return mDt;
   }
+  @Deprecated
   public Testsystem getTesting(){
     return mT;
   }
-  public Command getTeleopCommand(){
-    return mTeleopCommand;
+  public Shooter getShooter(){
+    return mS;
+  }
+  public Joystick getJoy(){
+    return singleStick;
+  }
+  public Command getDrivetrainTeleop(){
+    return JoyDrive;
+  }
+  public Command getShooterTeleop(){
+    return ButtonShooter;
   }
 }
