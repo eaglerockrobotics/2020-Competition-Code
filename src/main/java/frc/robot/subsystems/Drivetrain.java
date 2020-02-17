@@ -31,9 +31,34 @@ public class Drivetrain extends SubsystemBase {
   public void PercentDrive(double speedX, double speedY){
     //speedY: Positive Y goes forward, negative X goes backwards
     //speedX: Positive X goes left, negative X goes right
-    double FinalLeftSpeed = speedX < -.1 ? (speedY - speedX) : speedY;
-    double FinalRightSpeed = speedX > .1 ? (speedY + speedX) : speedY;
-    
+    double FinalLeftSpeed = speedY;
+    double FinalRightSpeed = speedY;
+    if(speedX < -.1){
+      /*FinalLeftSpeed = speedY - speedX;
+      FinalLeftSpeed = -(speedY - speedX);
+      */
+      if (-.1 < speedY && speedY < .1) {
+
+      FinalLeftSpeed = -speedX;
+      FinalRightSpeed = speedX;
+      }
+      else{
+        FinalLeftSpeed = speedY - speedX;
+      }
+    }
+    else if(speedX > .1){
+      if(-.1 < speedY && speedY < .1){
+      FinalLeftSpeed = -speedX;
+      FinalRightSpeed = speedX;
+      }
+      else{
+        FinalRightSpeed = speedY + speedX;
+      }
+    }
+    /*FinalLeftSpeed = speedX < -.1 ? (speedY - speedX) : speedY;
+    FinalRightSpeed = speedX > .1 ? (speedY + speedX) : speedY;
+    */
+
     //setting motors to speeds
     LM1.set(ControlMode.PercentOutput, FinalLeftSpeed * DriveHandicap);
     LM2.set(ControlMode.PercentOutput, FinalLeftSpeed * DriveHandicap);

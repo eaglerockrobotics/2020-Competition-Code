@@ -113,8 +113,20 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+<<<<<<< Updated upstream
     mTeleCommand = library.getTeleopCommand();
     mTeleCommand.schedule();
+=======
+    //mTeleCommand = library.getTeleopCommand();
+    //mTeleCommand.schedule();
+
+    currentDrivetrain = library.getDrivetrainTeleop();
+    currentShooter = library.getShooterTeleop();
+    
+    currentDrivetrain.schedule();
+
+
+>>>>>>> Stashed changes
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
