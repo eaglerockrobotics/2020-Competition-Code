@@ -7,11 +7,13 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LiftArm extends SubsystemBase {
+  Encoder ArmEncoder = new Encoder(-Integer.MAX_VALUE, Integer.MAX_VALUE);
   public LiftArm() {
-
+    ArmEncoder.reset();
   }
 
   @Override

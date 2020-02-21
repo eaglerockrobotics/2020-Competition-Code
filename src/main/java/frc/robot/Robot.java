@@ -92,7 +92,8 @@ public class Robot extends TimedRobot {
 
     currentDrivetrain = library.getDrivetrainTeleop();
     currentShooter = library.getShooterTeleop();
-
+    //currentDrivetrain.schedule();
+    currentShooter.schedule();
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

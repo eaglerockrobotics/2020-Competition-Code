@@ -8,17 +8,17 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
   /**
    * Creates a new Drivetrain.
    */
-  private VictorSPX RM1 = new VictorSPX(1);
-  private VictorSPX RM2 = new VictorSPX(2);
-  private VictorSPX LM1 = new VictorSPX(3);
-  private VictorSPX LM2 = new VictorSPX(4);
+  private TalonSRX RM1 = new TalonSRX(1);
+  private TalonSRX RM2 = new TalonSRX(2);
+  private TalonSRX LM1 = new TalonSRX(3);
+  private TalonSRX LM2 = new TalonSRX(4);
   public static double DriveHandicap = .8;
   public Drivetrain() {
   }

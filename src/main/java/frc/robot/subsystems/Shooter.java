@@ -21,7 +21,7 @@ public class Shooter extends SubsystemBase {
   boolean PIDReady = false;
   WPI_TalonSRX Encoder = new WPI_TalonSRX(6);
   TalonSRXConfiguration defaults = new TalonSRXConfiguration();
-  final double TargetVelocity = -28000;
+  final double TargetVelocity = -10000;
   double P = 1, I = 1, D = 1;
   double error,derivative,previous_error,integral,Answer,AnswerPercent;
   double speed = 0;
@@ -36,7 +36,7 @@ public class Shooter extends SubsystemBase {
     //Initializing SmartDashboard numbers
     SmartDashboard.putNumber("VelocityGraph",0);
     SmartDashboard.putNumber("CurrentVelocity",0);
-    SmartDashboard.putNumber("Target Velocity",0);
+    SmartDashboard.putNumber("Position?", 0);
     SmartDashboard.putNumber("P",0);
     SmartDashboard.putNumber("I",0);
     SmartDashboard.putNumber("D",0);
@@ -60,9 +60,9 @@ public class Shooter extends SubsystemBase {
    */
   public void ShootP(){
     SmartDashboard.putNumber("Time",PIDCooldown.get());
-    if(PIDCooldown.hasPeriodPassed(.25)){
+    if(PIDCooldown.hasPeriodPassed(.05)){
       speed = PPercent(TargetVelocity);
-    }
+    } 
     SmartDashboard.putNumber("Speed",speed);
     Encoder.set(ControlMode.PercentOutput,speed);
     
@@ -70,7 +70,7 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putNumber("VelocityGraph",Encoder.getSelectedSensorVelocity());
     SmartDashboard.putNumber("CurrentVelocity",Encoder.getSelectedSensorVelocity());
-
+    SmartDashboard.putNumber("Position?", Encoder.getSelectedSensorPosition());
   }
       /**
    * Stops
@@ -84,22 +84,19 @@ public class Shooter extends SubsystemBase {
     Answer = P*error;
     SmartDashboard.putNumber("Answer",Answer);
     AnswerPercent = VelocityToPercent(Answer, setspeed);
-    if(AnswerPercent > .7){
-      AnswerPercent = .7;
+    if(AnswerPercent > .8){
+      AnswerPercent = .8;
     }
-    if(AnswerPercent < -.7){
-      AnswerPercent = -.7;
+    if(AnswerPercent < -.8){
+      AnswerPercent = -.8;
+    }
+    if(Answer < 0){
+      AnswerPercent = -Math.abs(AnswerPercent);
     }
     return AnswerPercent;
   }
   private double VelocityToPercent(double in, double target){
-    if(in < 0){
-      return -Math.abs(in/target);
-    }
-    else{
-      return Math.abs(in/target);
-    }
-
+    return (1 - (Math.abs(in - target)/target));
   }
   @Override
   public void periodic() {
