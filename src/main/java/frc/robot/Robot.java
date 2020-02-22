@@ -92,6 +92,8 @@ public class Robot extends TimedRobot {
 
     currentDrivetrain = library.getDrivetrainTeleop();
     currentShooter = library.getShooterTeleop();
+    library.getShooter().CheckTargetVelSmartdash();
+    library.getShooter().ResetPID();
     //currentDrivetrain.schedule();
     currentShooter.schedule();
 

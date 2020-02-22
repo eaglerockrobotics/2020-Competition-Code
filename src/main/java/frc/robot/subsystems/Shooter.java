@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -21,10 +22,11 @@ public class Shooter extends SubsystemBase {
   boolean PIDReady = false;
   WPI_TalonSRX Encoder = new WPI_TalonSRX(6);
   TalonSRXConfiguration defaults = new TalonSRXConfiguration();
-  final double TargetVelocity = -10000;
-  double P = 1, I = 1, D = 1;
+  double TargetVelocity = -10000;
+  double P = .5, I = 1, D = 1;
   double error,derivative,previous_error,integral,Answer,AnswerPercent;
   double speed = 0;
+  PIDController WPI = new PIDController(1,1,0);
   
   public Shooter() {
     //Initialize Encoder
@@ -36,13 +38,17 @@ public class Shooter extends SubsystemBase {
     //Initializing SmartDashboard numbers
     SmartDashboard.putNumber("VelocityGraph",0);
     SmartDashboard.putNumber("CurrentVelocity",0);
-    SmartDashboard.putNumber("Position?", 0);
+    SmartDashboard.putNumber("Position", 0);
     SmartDashboard.putNumber("P",0);
     SmartDashboard.putNumber("I",0);
     SmartDashboard.putNumber("D",0);
     SmartDashboard.putNumber("Answer",0);
+    SmartDashboard.putNumber("WPI's Answer",0);
     SmartDashboard.putNumber("Ultrasonic Voltage",0);
     SmartDashboard.putNumber("Time",0);
+    SmartDashboard.putNumber("Insert Target Velocity", 0);
+    SmartDashboard.putNumber("To Percentage", 0);
+    
     //Start Timer, always on
     PIDCooldown.start();
   }
@@ -55,22 +61,24 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("VelocityGraph",Encoder.getSelectedSensorVelocity());
     SmartDashboard.putNumber("CurrentVelocity",Encoder.getSelectedSensorVelocity());
   }
+  public void CheckTargetVelSmartdash(){
+    if(SmartDashboard.getNumber("Insert Target Velocity", 0) != 0){
+      TargetVelocity = SmartDashboard.getNumber("Insert Target Velocity", -10000);
+    }
+    SmartDashboard.putNumber("Target Velocity", TargetVelocity);
+  }
     /**
    * Speeds up to a constant speed with Proportional control, after which able to shoot
    */
   public void ShootP(){
+    SmartDashboard.putNumber("WPI's Answer",WPI.calculate(Encoder.getSelectedSensorVelocity(), TargetVelocity));
     SmartDashboard.putNumber("Time",PIDCooldown.get());
-    if(PIDCooldown.hasPeriodPassed(.05)){
-      speed = PPercent(TargetVelocity);
-    } 
+    speed = PIPercent(TargetVelocity);
     SmartDashboard.putNumber("Speed",speed);
-    Encoder.set(ControlMode.PercentOutput,speed);
-    
-
-
+    Encoder.set(ControlMode.Velocity,speed);
     SmartDashboard.putNumber("VelocityGraph",Encoder.getSelectedSensorVelocity());
     SmartDashboard.putNumber("CurrentVelocity",Encoder.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Position?", Encoder.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Position", Encoder.getSelectedSensorPosition());
   }
       /**
    * Stops
@@ -78,25 +86,38 @@ public class Shooter extends SubsystemBase {
   public void Stop(){
     Encoder.set(ControlMode.PercentOutput, 0);
   }
-  private double PPercent(double setspeed){
+  private double PIPercent(double setspeed){
     error = setspeed - Encoder.getSelectedSensorVelocity();// Error = Target - Actual
     SmartDashboard.putNumber("P",error);
-    Answer = P*error;
+    //this.integral += (error*.02); // Integral is increased by the error*time (which is .02 seconds using normal IterativeRobot)
+    SmartDashboard.putNumber("I",this.integral);
+    SmartDashboard.putNumber("D",0);
+    Answer = P*error + I*this.integral;
     SmartDashboard.putNumber("Answer",Answer);
     AnswerPercent = VelocityToPercent(Answer, setspeed);
+    /*
+    if(Answer < 0){
+      AnswerPercent = -Math.abs(AnswerPercent);
+    }
     if(AnswerPercent > .8){
       AnswerPercent = .8;
     }
     if(AnswerPercent < -.8){
       AnswerPercent = -.8;
     }
-    if(Answer < 0){
-      AnswerPercent = -Math.abs(AnswerPercent);
-    }
     return AnswerPercent;
+    */
+    return Answer;
+  }
+  public void ResetPID(){
+    this.integral = 0;
+    this.error = 0;
+    this.derivative = 0;
   }
   private double VelocityToPercent(double in, double target){
-    return (1 - (Math.abs(in - target)/target));
+    double out = (in/target);
+    SmartDashboard.putNumber("To Percentage", out);
+    return out;
   }
   @Override
   public void periodic() {
