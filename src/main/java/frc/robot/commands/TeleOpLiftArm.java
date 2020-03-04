@@ -8,24 +8,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.LiftArm;
 
-public class ShootingWithAButton extends CommandBase {
+public class TeleOpLiftArm extends CommandBase {
   /**
-   * Creates a new ShootingWithAButton.
+   * Creates a new TeleOpLiftArm.
    */
-  private Shooter cShoot;
-  private Joystick cJoy;
-  private boolean Toggle = false;
-  private boolean PressOnce = false;
-  public ShootingWithAButton(Shooter in, Joystick inn) {
-    cShoot = in;
+  LiftArm cArm;
+  Joystick cJoy;
+  double output = 0;
+  public TeleOpLiftArm(LiftArm in, Joystick inn) {
+    cArm = in;
     cJoy = inn;
-    SmartDashboard.putBoolean("Shooter On", false);
+    addRequirements(cArm);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(cShoot);
   }
 
   // Called when the command is initially scheduled.
@@ -36,23 +33,8 @@ public class ShootingWithAButton extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(cJoy.getRawButton(1)){
-      if(!PressOnce){
-        PressOnce = true;
-        Toggle = !Toggle;
-      }
-    }
-    else{
-      PressOnce = false;
-    }
-
-    if(Toggle){ 
-      cShoot.ShootPID();
-    }
-    else{
-      cShoot.Stop();
-    }
-    SmartDashboard.putBoolean("Shooter On", Toggle);
+    output = cJoy.getRawAxis(3) - cJoy.getRawAxis(2);
+    cArm.Lol(output);
   }
 
   // Called once the command ends or is interrupted.

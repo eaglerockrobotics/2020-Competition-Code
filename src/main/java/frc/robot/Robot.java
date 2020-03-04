@@ -67,13 +67,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    // schedule the autonomous command (example)
-    /*
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
-    */
+    currentDrivetrain = library.getSimpleAuto();
+    currentDrivetrain.schedule();
   }
 
   /**
@@ -81,21 +76,16 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    library.getShooter().ShootP();
-    //library.getTesting().VSenseNPut();
   }
 
   @Override
   public void teleopInit() {
-    //mTeleCommand = library.getTeleopCommand();
-    //mTeleCommand.schedule();
-
     currentDrivetrain = library.getDrivetrainTeleop();
-    currentShooter = library.getShooterTeleop();
-    library.getShooter().CheckTargetVelSmartdash();
-    library.getShooter().ResetPID();
-    //currentDrivetrain.schedule();
+    currentShooter = library.getFullShooterWithIndexer();
+    currentArm = library.getTeleArm();
+    currentDrivetrain.schedule();
     currentShooter.schedule();
+    currentArm.schedule();
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -127,6 +117,5 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    library.getTesting().VSenseNPut();
   }
 }

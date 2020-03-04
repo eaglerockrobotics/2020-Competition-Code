@@ -7,15 +7,20 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Encoder;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LiftArm extends SubsystemBase {
-  Encoder ArmEncoder = new Encoder(-Integer.MAX_VALUE, Integer.MAX_VALUE);
-  public LiftArm() {
-    ArmEncoder.reset();
-  }
+  VictorSPX Ar1 = new VictorSPX(7);
+  VictorSPX Ar2 = new VictorSPX(8);
 
+  public LiftArm() {
+  }
+  public void Lol(double output) {
+    Ar1.set(ControlMode.PercentOutput, output/2);
+    Ar2.set(ControlMode.PercentOutput, -output/2);
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

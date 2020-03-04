@@ -10,11 +10,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ShootingWithAButton;
-import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.*;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.LiftArm;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Testsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -27,13 +27,16 @@ public class RobotContainer {
   //subsystems && other physicals
   private Joystick singleStick = new Joystick(0);
   private final Drivetrain mDt = new Drivetrain();
-  private final Testsystem mT = new Testsystem();
+  private final Indexer mI = new Indexer();
   private final Shooter mS = new Shooter();
+  private final LiftArm mA = new LiftArm();
 
   //Commands
   private final Command JoyDrive = new TeleopDrive(mDt, singleStick);
   private final Command ButtonShooter = new ShootingWithAButton(mS, singleStick);
-  private final Command mAutoCommand = null;
+  private final Command FullShooter = new CompleteTeleOpShooting(mS, mI, singleStick);
+  private final Command TeleArm = new TeleOpLiftArm(mA, singleStick);
+  private final Command AutoLine = new AutoPastLine(mDt);
 
   //Buttons and extras for Commands
 
@@ -58,10 +61,6 @@ public class RobotContainer {
   public Drivetrain getDrivetrain(){
     return mDt;
   }
-  @Deprecated
-  public Testsystem getTesting(){
-    return mT;
-  }
   public Shooter getShooter(){
     return mS;
   }
@@ -73,5 +72,14 @@ public class RobotContainer {
   }
   public Command getShooterTeleop(){
     return ButtonShooter;
+  }
+  public Command getFullShooterWithIndexer(){
+    return FullShooter;
+  }
+  public Command getTeleArm(){
+    return TeleArm;
+  }
+  public Command getSimpleAuto(){
+    return AutoLine;
   }
 }
