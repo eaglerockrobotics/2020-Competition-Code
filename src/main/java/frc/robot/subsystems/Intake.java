@@ -13,16 +13,14 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Indexer extends SubsystemBase {
+public class Intake extends SubsystemBase {
   /**
-   * Creates a new Indexer.
+   * Creates a new Intake.
    */
-  VictorSPX one = new VictorSPX(Constants.IndexerMotor1ID);
-  VictorSPX two = new VictorSPX(Constants.IndexerMotor2ID);
-  public Indexer() {
+  VictorSPX one = new VictorSPX(Constants.IntakeMotorID);
+  public Intake() {
 
   }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -35,22 +33,18 @@ public class Indexer extends SubsystemBase {
       in = -.8;
     }
     one.set(ControlMode.PercentOutput, in);
-    two.set(ControlMode.PercentOutput, -in);
   }
   public void ConstantDrive(boolean reverse){
     if(reverse){
-      one.set(ControlMode.PercentOutput, -Constants.IndexerFeedForward);
-      two.set(ControlMode.PercentOutput, Constants.IndexerFeedForward);
+      one.set(ControlMode.PercentOutput, -Constants.IntakeFeedForward);
     }
     else{
-      one.set(ControlMode.PercentOutput, Constants.IndexerFeedForward);
-      two.set(ControlMode.PercentOutput, -Constants.IndexerFeedForward);
+      one.set(ControlMode.PercentOutput, Constants.IntakeFeedForward);
     }
 
   }
 
 public void Stop() {
   one.set(ControlMode.PercentOutput, 0);
-  two.set(ControlMode.PercentOutput, 0);
 }
 }

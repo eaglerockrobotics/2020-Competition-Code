@@ -17,7 +17,7 @@ import frc.robot.Constants;
 public class Shooter extends SubsystemBase {
 
 
-  TalonSRX Encoder = new TalonSRX(6);
+  TalonSRX Encoder = new TalonSRX(Constants.ShooterID);
   double TargetVelocity = -13500;
   int CurrentVelocity = 0;
   

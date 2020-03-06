@@ -10,10 +10,11 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class LiftArm extends SubsystemBase {
-  VictorSPX Ar1 = new VictorSPX(7);
-  VictorSPX Ar2 = new VictorSPX(8);
+  VictorSPX Ar1 = new VictorSPX(Constants.LiftArmMotor1ID);
+  VictorSPX Ar2 = new VictorSPX(Constants.LiftArmMotor2ID);
 
   public LiftArm() {
   }

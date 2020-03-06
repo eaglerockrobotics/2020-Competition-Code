@@ -7,39 +7,48 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 
-public class AutoPastLine extends CommandBase {
+public class IntakeTeleop extends CommandBase {
   /**
-   * Creates a new AutoPastLine.
+   * Creates a new IntakeTeleop.
    */
-  Timer TwoSecondsToMove = new Timer();
-  Drivetrain cDrive;
-  boolean done = false;
-  public AutoPastLine(Drivetrain in) {
-    cDrive = in;
-    addRequirements(cDrive);
+  private Intake cInt;
+  private Joystick cJoy;
+  private boolean Toggle = false;
+  private boolean PressOnce = false;
+  public IntakeTeleop(Intake in, Joystick inn) {
+    cInt = in;
+    cJoy = inn;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    TwoSecondsToMove.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(TwoSecondsToMove.hasPeriodPassed(2)){
-      cDrive.Stop();
-      TwoSecondsToMove.stop();
-      done = true;
+    //TODO: Find button suitable
+    if(cJoy.getRawButton(3)){
+      if(!PressOnce){
+        PressOnce = true;
+        Toggle = !Toggle;
+      }
     }
     else{
-      cDrive.PercentDrive(0, .5);
+      PressOnce = false;
+    }
+
+    if(Toggle){ 
+      cInt.ConstantDrive(false);
+    }
+    else{
+      cInt.Stop();
     }
   }
 
@@ -51,6 +60,6 @@ public class AutoPastLine extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return done;
+    return false;
   }
 }

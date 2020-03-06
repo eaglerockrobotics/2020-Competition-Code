@@ -25,17 +25,17 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   //subsystems && other physicals
-  private Joystick singleStick = new Joystick(0);
+  private Joystick DriveArmJoy = new Joystick(0);
+  private Joystick MechJoy = new Joystick(0);
   private final Drivetrain mDt = new Drivetrain();
   private final Indexer mI = new Indexer();
   private final Shooter mS = new Shooter();
   private final LiftArm mA = new LiftArm();
 
   //Commands
-  private final Command JoyDrive = new TeleopDrive(mDt, singleStick);
-  private final Command ButtonShooter = new ShootingWithAButton(mS, singleStick);
-  private final Command FullShooter = new CompleteTeleOpShooting(mS, mI, singleStick);
-  private final Command TeleArm = new TeleOpLiftArm(mA, singleStick);
+  private final Command JoyDrive = new TeleopDrive(mDt, DriveArmJoy);
+  private final Command FullShooter = new CompleteTeleOpShooting(mS, mI, MechJoy);
+  private final Command TeleArm = new TeleOpLiftArm(mA, DriveArmJoy);
   private final Command AutoLine = new AutoPastLine(mDt);
 
   //Buttons and extras for Commands
@@ -64,14 +64,14 @@ public class RobotContainer {
   public Shooter getShooter(){
     return mS;
   }
-  public Joystick getJoy(){
-    return singleStick;
+  public Joystick getJoy(boolean driveOrMech){
+    if(driveOrMech){
+      return DriveArmJoy;
+    }
+    return MechJoy;
   }
   public Command getDrivetrainTeleop(){
     return JoyDrive;
-  }
-  public Command getShooterTeleop(){
-    return ButtonShooter;
   }
   public Command getFullShooterWithIndexer(){
     return FullShooter;

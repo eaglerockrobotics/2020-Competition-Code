@@ -59,5 +59,18 @@ public final class Constants {
     public static final boolean drMotorInvert = false;
 
     public static final double IndexerFeedForward = .5;
+    public static final double IntakeFeedForward = .5;
+
+    public static final int RightMotor1ID = 1;
+    public static final int RightMotor2ID = 2;
+    public static final int LeftMotor1ID = 3;
+    public static final int LeftMotor2ID = 4;
+    public static final int IntakeMotorID = 5;
+    public static final int ShooterID = 6;
+    public static final int IndexerMotor1ID = 7;
+    public static final int IndexerMotor2ID = 8;
+    public static final int LiftArmMotor1ID = 9;
+    public static final int LiftArmMotor2ID = 10;
+    
 
 }

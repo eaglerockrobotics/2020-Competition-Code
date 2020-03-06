@@ -18,15 +18,11 @@ public class Drivetrain extends SubsystemBase {
   /**
    * Creates a new Drivetrain.
    */
-  static int twenty1 = 0;
-  static int lul = twenty1;
-  static int pog = lul;
-  static int kekW = pog;
-  private static final PigeonIMU Pigeon = new PigeonIMU(kekW);
-  private TalonSRX RM1 = new TalonSRX(1);
-  private TalonSRX RM2 = new TalonSRX(2);
-  private TalonSRX LM1 = new TalonSRX(3);
-  private TalonSRX LM2 = new TalonSRX(4);
+  private static final PigeonIMU Pigeon = new PigeonIMU(0);
+  private TalonSRX RM1 = new TalonSRX(Constants.RightMotor1ID);
+  private TalonSRX RM2 = new TalonSRX(Constants.RightMotor2ID);
+  private TalonSRX LM1 = new TalonSRX(Constants.LeftMotor1ID);
+  private TalonSRX LM2 = new TalonSRX(Constants.LeftMotor2ID);
   private double XPosition = 0;
   private double YPosition = 0;
   private double LastPosL = 0;
